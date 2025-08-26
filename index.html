@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Vapi Voice Agent</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #0f172a;
+      color: #fff;
+    }
+    .call-box {
+      text-align: center;
+      background: #1e293b;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    }
+    button {
+      font-size: 18px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #06b6d4;
+      color: #fff;
+      margin: 10px;
+    }
+    button.end {
+      background: #ef4444;
+    }
+  </style>
+</head>
+<body>
+  <div class="call-box">
+    <h2>Talk to Our Vapi Agent</h2>
+    <button id="callBtn">Start Call</button>
+    <button id="endBtn" class="end" disabled>End Call</button>
+    <p id="status">Idle</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vapi-js@latest/dist/vapi.min.js"></script>
+  <script>
+    const API_KEY = "02321b69-262c-4407-9f75-631eda873146";
+    const AGENT_ID = "a789e015-9949-4bfd-873e-1c1ae4407fef";
+
+    const callBtn = document.getElementById("callBtn");
+    const endBtn = document.getElementById("endBtn");
+    const statusEl = document.getElementById("status");
+
+    let call;
+
+    callBtn.addEventListener("click", async () => {
+      statusEl.textContent = "Connecting...";
+      call = await window.vapi.start({
+        apiKey: API_KEY,
+        agentId: AGENT_ID,
+      });
+      statusEl.textContent = "On Call";
+      callBtn.disabled = true;
+      endBtn.disabled = false;
+    });
+
+    endBtn.addEventListener("click", () => {
+      if (call) {
+        call.stop();
+        statusEl.textContent = "Call Ended";
+      }
+      callBtn.disabled = false;
+      endBtn.disabled = true;
+    });
+  </script>
+</body>
+</html>
